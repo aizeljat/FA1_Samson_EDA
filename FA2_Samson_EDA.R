@@ -1,0 +1,47 @@
+#1
+
+library(tidyr)
+library(tidyverse)
+
+file_path <- "C:\\Users\\User\\OneDrive\\FRESHMAN\\3rd yr - 2nd Sem\\Data Analysis\\cytof_one_experiment.csv"
+data <- read.csv(file_path)
+
+# Use pivot_longer to reshape the dataset
+reshaped_data <- pivot_longer(data, 
+                              cols = everything(),  
+                              names_to = "Protein", 
+                              values_to = "Amount")
+print(reshaped_data)
+
+#2
+library(dplyr)
+summary_data <- reshaped_data %>%
+  group_by(Protein) %>%
+  summarise(
+    median = median(Amount),
+    mad = mad(Amount)
+  )
+print(summary_data)
+
+#3
+library(ggplot2)
+ggplot(summary_data, aes(x = mad, y = median)) +
+  geom_point(color = "violet", size = 3) +  
+  labs(title = "Spread-Location (s-l) Plot",
+       x = "Median Absolute Deviation (MAD)",
+       y = "Median Protein Level",
+       subtitle = "Customized Plot") 
+
+#4
+library(dplyr)
+library(tidyr)
+
+# Reshape the dataset using pivot_longer
+reshaped_data <- data %>%
+  pivot_longer(cols = -contains("Country_Event_Year"),
+               names_to = "Country_Event_Year",
+               values_to = "Score") %>%
+  separate(Country_Event_Year, into = c("Country", "Event", "Year"), sep = "_")
+
+print(reshaped_data)
+
